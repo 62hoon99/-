@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.stream.Collectors;
 
 class Solution {
     public int solution(int k, int[] tangerine) {
@@ -11,9 +10,11 @@ class Solution {
             map.put(size, map.getOrDefault(size, 0) + 1);
         }
         
-        List<Integer> list = map.values().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+    
+        List<Integer> valueList = new ArrayList(map.values());
+        Collections.sort(valueList, Collections.reverseOrder());
         
-        for(int value : list) {
+        for(int value : valueList) {
             k -= value;
             answer++;
             if(k <= 0) {
