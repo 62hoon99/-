@@ -14,7 +14,7 @@ class Solution {
         for (int topping : toppings) {
             old.addDesert(topping);
             yg.removeDesert(topping);
-            if (old.count == yg.count) {
+            if (old.getCount() == yg.getCount()) {
                 answer++;
             }
         }
