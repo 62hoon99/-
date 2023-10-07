@@ -14,24 +14,24 @@ class Solution {
 
     private int[] find(int[] emoticons, List<User> users, int depth) {
         if (emoticons.length == depth) {
-            int lastCount = (int) users.stream().filter(User::isEmoticonPlusServiceAvailable).count();
-            int lastMoney = users.stream().filter(user -> !user.isEmoticonPlusServiceAvailable())
+            int numberOfEmoticonPlusServiceUsers = (int) users.stream().filter(User::isEmoticonPlusServiceAvailable).count();
+            int sumOfEmoticonPaymentAmount = users.stream().filter(user -> !user.isEmoticonPlusServiceAvailable())
                     .mapToInt(User::getPurchaseAmount).sum();
 
-            return new int[]{lastCount, lastMoney};
+            return new int[]{numberOfEmoticonPlusServiceUsers, sumOfEmoticonPaymentAmount};
         }
 
         int[] maxResult = new int[2];
 
         for (int discount : discountArray) {
-            users.forEach(user -> user.buy(emoticons[depth], discount));
+            users.forEach(user -> user.buyEmoticon(emoticons[depth], discount));
 
             int[] result = find(emoticons, users, depth + 1);
             if ((maxResult[0] == result[0] && maxResult[1] < result[1]) || (maxResult[0] < result[0])) {
                 maxResult = result;
             }
 
-            users.forEach(user -> user.sell(emoticons[depth], discount));
+            users.forEach(user -> user.sellEmoticon(emoticons[depth], discount));
         }
 
         return maxResult;
@@ -55,13 +55,13 @@ class Solution {
             return purchaseAmount >= limit;
         }
 
-        public void buy(int amount, int ratio) {
+        public void buyEmoticon(int amount, int ratio) {
             if (this.ratio <= ratio) {
                 purchaseAmount += calculateDiscountedAmount(amount, ratio);
             }
         }
 
-        public void sell(int amount, int ratio) {
+        public void sellEmoticon(int amount, int ratio) {
             if (this.ratio <= ratio) {
                 purchaseAmount -= calculateDiscountedAmount(amount, ratio);
             }
